@@ -24,14 +24,14 @@ export const jishoResponseSchema = z.object({
 	data: z.array(
 		z.object({
 			slug: z.string(),
-			is_common: z.boolean(),
+			is_common: z.boolean().optional(),
 			tags: z.array(z.string()),
 			jlpt: z.array(z.string()),
 			japanese: z
 				.array(
 					z.object({
 						word: z.string().optional(),
-						reading: z.string()
+						reading: z.string().optional()
 					})
 				)
 				.optional(),

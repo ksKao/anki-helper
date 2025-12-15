@@ -78,8 +78,8 @@
 
 				definitions.set(word, { data: content, type: 'definition' });
 
-				message = 'Waiting 2 seconds';
-				await new Promise((resolve) => setTimeout(resolve, 2000));
+				message = 'Waiting 1 second';
+				await new Promise((resolve) => setTimeout(resolve, 1000));
 			}
 
 			return definitions;

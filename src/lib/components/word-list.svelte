@@ -6,6 +6,7 @@
 	import { createMutation } from '@tanstack/svelte-query';
 	import { addNotesSchema } from '$lib/schema';
 	import { toast } from 'svelte-sonner';
+	import { Trash2Icon } from '@lucide/svelte';
 
 	const validDefinitions = $derived(
 		[...globalState.definitions.entries()].filter((d) => d[1].type === 'definition')
@@ -70,13 +71,24 @@
 		Import {validDefinitions.length} entries
 	</Button>
 	{#each globalState.definitions as [front, back]}
-		<p class="font-semi-bold text-xl">{front}</p>
-		{#if back.type === 'definition'}
-			<Field.Field>
-				<Textarea class="h-32 resize-y" id={`word-${front}`} bind:value={back.data} />
-			</Field.Field>
-		{:else}
-			<p class="text-destructive">{back.data}</p>
-		{/if}
+		<div class="space-y-2 rounded-md border border-border p-4">
+			<div class="flex items-center justify-between">
+				<p class="font-semi-bold text-xl">{front}</p>
+				<Button
+					size="icon"
+					variant="destructive"
+					onclick={() => globalState.definitions.delete(front)}
+				>
+					<Trash2Icon />
+				</Button>
+			</div>
+			{#if back.type === 'definition'}
+				<Field.Field>
+					<Textarea class="h-32 resize-y" id={`word-${front}`} bind:value={back.data} />
+				</Field.Field>
+			{:else}
+				<p class="text-destructive">{back.data}</p>
+			{/if}
+		</div>
 	{/each}
 {/if}
