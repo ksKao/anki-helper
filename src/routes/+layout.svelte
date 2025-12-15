@@ -22,5 +22,7 @@
 </svelte:head>
 <QueryClientProvider client={queryClient}>
 	<Toaster richColors position="top-center" />
-	{@render children()}
+	<main class="max-w-3xl p-8">
+		{@render children()}
+	</main>
 </QueryClientProvider>
