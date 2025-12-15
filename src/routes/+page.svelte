@@ -6,18 +6,34 @@
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import WordListInput from '$lib/components/word-list-input.svelte';
 	import WordList from '$lib/components/word-list.svelte';
+	import { getDecksSchema } from '$lib/schema';
 	import { globalState } from '$lib/state.svelte';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { toast } from 'svelte-sonner';
-	import { getDecks } from './data.remote';
 
 	const getDeckMutation = createMutation(() => ({
 		mutationFn: async () => {
-			const response = await getDecks(globalState.ankiUrl);
+			const response = await fetch(`${globalState.ankiUrl}`, {
+				method: 'POST',
+				body: JSON.stringify({
+					action: 'deckNames',
+					version: 6
+				})
+			});
 
-			if (response.data) return response.data;
+			if (!response.ok) {
+				throw new Error(await response.text());
+			}
 
-			throw new Error(response.error ?? 'Unable to get deck');
+			const json = await response.json();
+
+			const parsed = getDecksSchema.parse(json);
+
+			if (parsed.error) {
+				throw new Error(parsed.error);
+			}
+
+			return parsed.result ?? [];
 		},
 		onSuccess: (data) => {
 			if (!data.length) {
